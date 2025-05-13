@@ -15,14 +15,21 @@ class CategoryViewSet(APITestCase):
         self.category = CategoryFactory(title="books")
 
     def test_get_all_category(self):
-        response = self.client.get(
-            reverse("category-list", kwargs={"version": "v1"}))
-
+        response = self.client.get(reverse("category-list", kwargs={"version": "v1"}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         category_data = json.loads(response.content)
 
-        self.assertEqual(category_data["results"]
-                        [0]["title"], self.category.title)
+        # Verifica se 'category_data' é uma lista
+        self.assertIsInstance(category_data, list, "category_data nao e uma lista.")
+
+        # Verifica se 'category_data' não está vazia
+        self.assertTrue(category_data, "category_data esta vazia.")
+
+        first_category = category_data[0]
+
+        self.assertEqual(first_category["title"], self.category.title)
+
 
     def test_create_category(self):
         data = json.dumps({"title": "technology"})

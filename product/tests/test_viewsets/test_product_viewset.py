@@ -25,21 +25,25 @@ class TestProductViewSet(APITestCase):
         )
 
     def test_get_all_product(self):
-        token = Token.objects.get(user__username=self.user.username)  # added
-        self.client.credentials(
-            HTTP_AUTHORIZATION="Token " + token.key)  # added
-        response = self.client.get(
-            reverse("product-list", kwargs={"version": "v1"}))
+        token = Token.objects.get(user__username=self.user.username)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        response = self.client.get(reverse("product-list", kwargs={"version": "v1"}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         product_data = json.loads(response.content)
 
-        self.assertEqual(product_data["results"]
-                        [0]["title"], self.product.title)
-        self.assertEqual(product_data["results"]
-                        [0]["price"], self.product.price)
-        self.assertEqual(product_data["results"]
-                        [0]["active"], self.product.active)
+        # Verifica se 'product_data' é uma lista
+        self.assertIsInstance(product_data, list, "product_data nao e uma lista.")
+
+        # Verifica se 'product_data' não está vazia
+        self.assertTrue(product_data, "product_data esta vazia.")
+
+        first_product = product_data[0]
+
+        self.assertEqual(first_product["title"], self.product.title)
+        self.assertEqual(first_product["price"], self.product.price)
+        self.assertEqual(first_product["active"], self.product.active)
 
     def test_create_product(self):
         token = Token.objects.get(user__username=self.user.username)

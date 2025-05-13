@@ -16,10 +16,12 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('order.urls')),  # Inclui as URLs da aplicação `order` com versão v1
-    path('api/v1/', include('product.urls')),  # Inclui as URLs da aplicação `product` com versão v1
+    re_path('bookstore/(?P<version>(v1|v2))/', include('order.urls')),
+    re_path('bookstore/(?P<version>(v1|v2))/', include('product.urls'))
+    # path('api/v1/', include('order.urls')),  # Inclui as URLs da aplicação `order` com versão v1
+    # path('api/v1/', include('product.urls')),  # Inclui as URLs da aplicação `product` com versão v1
 ]
