@@ -28,11 +28,23 @@ class TestOrderViewSet(APITestCase):
 
         order_data = json.loads(response.content)
 
-        # Verifica se 'results' não está vazio
-        self.assertIsInstance(order_data, list, "order_data nao e uma lista.")
-        self.assertTrue(order_data, "order_data esta vazia.")
-
-        first_result = order_data[0]
+        # Verifica se a resposta tem paginação (estrutura do DRF)
+        if isinstance(order_data, dict) and 'results' in order_data:
+            # Resposta paginada
+            self.assertIn('results', order_data, "A chave 'results' nao esta presente na resposta paginada.")
+            self.assertIn('count', order_data, "A chave 'count' nao esta presente na resposta paginada.")
+            
+            results = order_data['results']
+            self.assertIsInstance(results, list, "results nao e uma lista.")
+            self.assertTrue(results, "results esta vazia.")
+            
+            first_result = results[0]
+        else:
+            # Resposta sem paginação (lista direta)
+            self.assertIsInstance(order_data, list, "order_data nao e uma lista.")
+            self.assertTrue(order_data, "order_data esta vazia.")
+            
+            first_result = order_data[0]
 
         # Verifica se 'first_result' é um dicionário
         self.assertIsInstance(first_result, dict, "O primeiro item de results nao e um dicionario.")
@@ -60,8 +72,6 @@ class TestOrderViewSet(APITestCase):
             self.assertEqual(category_data[0]["title"], self.category.title)
         else:
             self.assertEqual(category_data["title"], self.category.title)
-
-
 
     def test_create_order(self):
         user = UserFactory()

@@ -20,16 +20,25 @@ class CategoryViewSet(APITestCase):
 
         category_data = json.loads(response.content)
 
-        # Verifica se 'category_data' é uma lista
-        self.assertIsInstance(category_data, list, "category_data nao e uma lista.")
-
-        # Verifica se 'category_data' não está vazia
-        self.assertTrue(category_data, "category_data esta vazia.")
-
-        first_category = category_data[0]
+        # Verifica se a resposta tem paginação (estrutura do DRF)
+        if isinstance(category_data, dict) and 'results' in category_data:
+            # Resposta paginada
+            self.assertIn('results', category_data, "A chave 'results' nao esta presente na resposta paginada.")
+            self.assertIn('count', category_data, "A chave 'count' nao esta presente na resposta paginada.")
+            
+            results = category_data['results']
+            self.assertIsInstance(results, list, "results nao e uma lista.")
+            self.assertTrue(results, "results esta vazia.")
+            
+            first_category = results[0]
+        else:
+            # Resposta sem paginação (lista direta)
+            self.assertIsInstance(category_data, list, "category_data nao e uma lista.")
+            self.assertTrue(category_data, "category_data esta vazia.")
+            
+            first_category = category_data[0]
 
         self.assertEqual(first_category["title"], self.category.title)
-
 
     def test_create_category(self):
         data = json.dumps({"title": "technology"})
