@@ -1,7 +1,7 @@
 # `python-base` sets up all our shared environment variables
 FROM python:3.13-slim AS builder
 
-    # python
+# python
 ENV PYTHONUNBUFFERED=1 \
     # prevents python creating .pyc files
     PYTHONDONTWRITEBYTECODE=1 \
@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED=1 \
     \
     # poetry
     # https://python-poetry.org/docs/configuration/#using-environment-variables
-    POETRY_VERSION=1.0.3 \
+    POETRY_VERSION=1.6.1 \
     # make poetry install to this location
     POETRY_HOME="/opt/poetry" \
     # make poetry create the virtual environment in the project's root
@@ -27,24 +27,23 @@ ENV PYTHONUNBUFFERED=1 \
     PYSETUP_PATH="/opt/pysetup" \
     VENV_PATH="/opt/pysetup/.venv"
 
-
 # prepend poetry and venv to path
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
+# Install system dependencies
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         # deps for installing poetry
         curl \
         # deps for building python deps
-        build-essential
+        build-essential \
+        # PostgreSQL dependencies
+        libpq-dev \
+        gcc \
+    && rm -rf /var/lib/apt/lists/*
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN pip install poetry==1.6.1
-
-# install postgres dependencies inside of Docker
-RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
 
 # copy project requirement files here to ensure they will be cached.
 WORKDIR $PYSETUP_PATH
@@ -53,7 +52,10 @@ COPY poetry.lock pyproject.toml ./
 # install runtime deps - uses $POETRY_VIRTUALENVS_IN_PROJECT internally
 RUN poetry install --only=main
 
-# quicker install as runtime deps are already installed
+# install psycopg2-binary specifically (more reliable than compiling)
+RUN pip install psycopg2-binary
+
+# install all dependencies including dev dependencies
 RUN poetry install
 
 WORKDIR /app
