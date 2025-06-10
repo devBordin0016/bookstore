@@ -78,6 +78,8 @@ class TestOrderViewSet(APITestCase):
         product = ProductFactory()
         data = json.dumps({"products_id": [product.id], "user": user.id})
 
+        self.client.force_authenticate(user=user)
+
         response = self.client.post(
             reverse("order-list", kwargs={"version": "v2"}),
             data=data,
