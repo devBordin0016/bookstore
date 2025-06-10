@@ -13,7 +13,7 @@ jobs:
     
     # Apenas a SECRET_KEY necessária para os testes
     env:
-      SECRET_KEY: 'django-insecure-test-key-for-github-actions-only'
+      SECRET_KEY: 'django-insecure-uma-string-aleatoria-32-caracteres'
 
     steps:
     - uses: actions/checkout@v2
@@ -38,6 +38,7 @@ jobs:
 
     - name: Test
       env:
-        SECRET_KEY: 'django-insecure-test-key-for-github-actions-only'
+        DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1"
+        SECRET_KEY: 'django-insecure-uma-string-aleatoria-32-caracteres'
       run: |
         poetry run python manage.py test

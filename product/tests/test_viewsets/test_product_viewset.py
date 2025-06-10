@@ -18,8 +18,6 @@ class TestProductViewSet(APITestCase):
         token = Token.objects.create(user=self.user)  # added
         token.save()  # added
 
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
-
         self.product = ProductFactory(
             title="pro controller",
             price=200.00,
