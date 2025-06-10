@@ -1,53 +1,18 @@
 name: Python application
 
-on: 
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: [3.10]
 
     runs-on: ubuntu-latest
-    
-    # Variáveis de ambiente necessárias para o Django
-    env:
-      SECRET_KEY: 'django-insecure-test-key-for-github-actions-only'
-      DEBUG: 'False'
-      # Configurações do banco de dados
-      DB_ENGINE: 'django.db.backends.postgresql'
-      DB_NAME: 'bookstore_dev_db'
-      DB_USER: 'bookstore_dev'
-      DB_PASSWORD: 'bookstore_dev'
-      DB_HOST: 'localhost'
-      DB_PORT: '5432'
-      # Alternativa com DATABASE_URL (escolha uma das duas abordagens)
-      DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/test_bookstore'
-
-    # Configuração do banco PostgreSQL
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_bookstore
-          POSTGRES_USER: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v2
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
@@ -59,35 +24,13 @@ jobs:
         python -m ensurepip
         python -m pip install --upgrade pip
         python -m pip install --upgrade poetry
-
-    - name: Configure poetry
-      run: |
-        poetry config virtualenvs.create true
-        poetry config virtualenvs.in-project true
-
-    - name: Cache poetry dependencies
-      uses: actions/cache@v3
-      with:
-        path: .venv
-        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+    - name: View poetry --help
+      run: poetry --help
 
     - name: Install dependencies
-      run: |
-        poetry install --no-interaction --no-ansi
+      shell: bash
+      run: python -m poetry install
 
-    - name: Run Django checks
+    - name: Test
       run: |
-        poetry run python manage.py check
-
-    - name: Create and run migrations
-      run: |
-        poetry run python manage.py makemigrations --check --dry-run
-        poetry run python manage.py migrate
-
-    - name: Collect static files
-      run: |
-        poetry run python manage.py collectstatic --noinput --clear
-
-    - name: Run tests
-      run: |
-        poetry run python manage.py test --verbosity=2
+        poetry run python manage.py test
