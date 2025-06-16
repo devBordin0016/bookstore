@@ -26,12 +26,17 @@ jobs:
       - name: Install dependencies with Poetry
         run: poetry install
 
-      - name: Run Tests
-        run: poetry run python manage.py test
-      
-      - name: Test
+      - name: Run Django tests
         env:
           DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1"
           SECRET_KEY: 'django-insecure-uma-string-aleatoria-32-caracteres'
         run: |
           poetry run python manage.py test
+
+      - name: Wemake Python Styleguide
+        uses: wemake-services/wemake-python-styleguide@0.16.0
+        continue-on-error: true
+        with:
+          reporter: 'github-pr-review'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
