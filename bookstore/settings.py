@@ -150,10 +150,11 @@ REST_FRAMEWORK = {
     ],
 }
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# Fallback seguro para testes locais, sem .env
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key")
 
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = os.environ.get("DEBUG", "1") == "1"
 
-# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
-# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ")
+# Aceita localhost, 127.0.0.1 e ::1 se variável não for fornecida
+ALLOWED_HOSTS = list(filter(None, os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1 localhost [::1]").split(" ")))
+
