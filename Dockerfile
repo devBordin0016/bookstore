@@ -43,7 +43,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
-RUN pip install poetry==1.6.1
+RUN pip install --no-cache-dir poetry==1.6.1
 
 # copy project requirement files here to ensure they will be cached.
 WORKDIR $PYSETUP_PATH
@@ -53,7 +53,7 @@ COPY poetry.lock pyproject.toml ./
 RUN poetry install --only=main
 
 # install psycopg2-binary specifically (more reliable than compiling)
-RUN pip install psycopg2-binary
+RUN pip install --no-cache-dir psycopg2-binary
 
 # install all dependencies including dev dependencies
 RUN poetry install

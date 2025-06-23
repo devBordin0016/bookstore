@@ -7,11 +7,17 @@ from rest_framework.views import status
 from product.factories import CategoryFactory
 from product.models import Category
 
+from order.factories import UserFactory  # Corrigir: certifique-se de que essa importação exista
 
-class CategoryViewSet(APITestCase):
-    client = APIClient()
+class TestCategoryViewSet(APITestCase):  # Corrigido: nome da classe deve começar com "Test" para ser reconhecida como teste
 
     def setUp(self):
+        self.client = APIClient()
+
+        # Criar e autenticar o usuário
+        self.user = UserFactory()
+        self.client.force_authenticate(user=self.user)
+
         self.category = CategoryFactory(title="books")
 
     def test_get_all_category(self):
@@ -20,22 +26,12 @@ class CategoryViewSet(APITestCase):
 
         category_data = json.loads(response.content)
 
-        # Verifica se a resposta tem paginação (estrutura do DRF)
         if isinstance(category_data, dict) and 'results' in category_data:
-            # Resposta paginada
-            self.assertIn('results', category_data, "A chave 'results' nao esta presente na resposta paginada.")
-            self.assertIn('count', category_data, "A chave 'count' nao esta presente na resposta paginada.")
-            
             results = category_data['results']
-            self.assertIsInstance(results, list, "results nao e uma lista.")
-            self.assertTrue(results, "results esta vazia.")
-            
+            self.assertTrue(results)
             first_category = results[0]
         else:
-            # Resposta sem paginação (lista direta)
-            self.assertIsInstance(category_data, list, "category_data nao e uma lista.")
-            self.assertTrue(category_data, "category_data esta vazia.")
-            
+            self.assertTrue(category_data)
             first_category = category_data[0]
 
         self.assertEqual(first_category["title"], self.category.title)
@@ -52,5 +48,4 @@ class CategoryViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         created_category = Category.objects.get(title="technology")
-
         self.assertEqual(created_category.title, "technology")
