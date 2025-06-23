@@ -158,3 +158,4 @@ DEBUG = os.environ.get("DEBUG", "1") == "1"
 
 # Aceita localhost, 127.0.0.1 e ::1 se variável não for fornecida
 ALLOWED_HOSTS = list(filter(None, os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1 localhost [::1]").split(" ")))
+
