@@ -1,4 +1,3 @@
-
 import json
 
 from django.urls import reverse
@@ -33,13 +32,23 @@ class TestProductViewSet(APITestCase):
 
         product_data = json.loads(response.content)
 
-        # Verifica se 'product_data' é uma lista
-        self.assertIsInstance(product_data, list, "product_data nao e uma lista.")
-
-        # Verifica se 'product_data' não está vazia
-        self.assertTrue(product_data, "product_data esta vazia.")
-
-        first_product = product_data[0]
+        # Verifica se a resposta tem paginação (estrutura do DRF)
+        if isinstance(product_data, dict) and 'results' in product_data:
+            # Resposta paginada
+            self.assertIn('results', product_data, "A chave 'results' nao esta presente na resposta paginada.")
+            self.assertIn('count', product_data, "A chave 'count' nao esta presente na resposta paginada.")
+            
+            results = product_data['results']
+            self.assertIsInstance(results, list, "results nao e uma lista.")
+            self.assertTrue(results, "results esta vazia.")
+            
+            first_product = results[0]
+        else:
+            # Resposta sem paginação (lista direta)
+            self.assertIsInstance(product_data, list, "product_data nao e uma lista.")
+            self.assertTrue(product_data, "product_data esta vazia.")
+            
+            first_product = product_data[0]
 
         self.assertEqual(first_product["title"], self.product.title)
         self.assertEqual(first_product["price"], self.product.price)
