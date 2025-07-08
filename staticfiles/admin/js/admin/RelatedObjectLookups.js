@@ -55,9 +55,14 @@
         if (elem.classList.contains('vManyToManyRawIdAdminField') && elem.value) {
             elem.value += ',' + chosenId;
         } else {
+<<<<<<< HEAD
             elem.value = chosenId;
         }
         $(elem).trigger('change');
+=======
+            document.getElementById(name).value = chosenId;
+        }
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
         const index = relatedWindows.indexOf(win);
         if (index > -1) {
             relatedWindows.splice(index, 1);
@@ -88,7 +93,11 @@
         }
     }
 
+<<<<<<< HEAD
     function updateRelatedSelectsOptions(currentSelect, win, objId, newRepr, newId, skipIds = []) {
+=======
+    function updateRelatedSelectsOptions(currentSelect, win, objId, newRepr, newId) {
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
         // After create/edit a model from the options next to the current
         // select (+ or :pencil:) update ForeignKey PK of the rest of selects
         // in the page.
@@ -101,7 +110,11 @@
         const selectsRelated = document.querySelectorAll(`[data-model-ref="${modelName}"] [data-context="available-source"]`);
 
         selectsRelated.forEach(function(select) {
+<<<<<<< HEAD
             if (currentSelect === select || skipIds && skipIds.includes(select.id)) {
+=======
+            if (currentSelect === select) {
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
                 return;
             }
 
@@ -110,11 +123,14 @@
             if (!option) {
                 option = new Option(newRepr, newId);
                 select.options.add(option);
+<<<<<<< HEAD
                 // Update SelectBox cache for related fields.
                 if (window.SelectBox !== undefined && !SelectBox.cache[currentSelect.id]) {
                     SelectBox.add_to_cache(select.id, option);
                     SelectBox.redisplay(select.id);
                 }
+=======
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
                 return;
             }
 
@@ -142,6 +158,7 @@
             $(elem).trigger('change');
         } else {
             const toId = name + "_to";
+<<<<<<< HEAD
             const toElem = document.getElementById(toId);
             const o = new Option(newRepr, newId);
             SelectBox.add_to_cache(toId, o);
@@ -150,6 +167,11 @@
                 const skipIds = [name + "_from"];
                 updateRelatedSelectsOptions(toElem, win, null, newRepr, newId, skipIds);
             }
+=======
+            const o = new Option(newRepr, newId);
+            SelectBox.add_to_cache(toId, o);
+            SelectBox.redisplay(toId);
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
         }
         const index = relatedWindows.indexOf(win);
         if (index > -1) {
@@ -206,7 +228,10 @@
     window.dismissChangeRelatedObjectPopup = dismissChangeRelatedObjectPopup;
     window.dismissDeleteRelatedObjectPopup = dismissDeleteRelatedObjectPopup;
     window.dismissChildPopups = dismissChildPopups;
+<<<<<<< HEAD
     window.relatedWindows = relatedWindows;
+=======
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
 
     // Kept for backward compatibility
     window.showAddAnotherPopup = showRelatedObjectPopup;

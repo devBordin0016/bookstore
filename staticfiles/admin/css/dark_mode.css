@@ -84,8 +84,13 @@ html[data-theme="dark"] {
 
 .theme-toggle svg {
     vertical-align: middle;
+<<<<<<< HEAD
     height: 1.5rem;
     width: 1.5rem;
+=======
+    height: 1rem;
+    width: 1rem;
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
     display: none;
 }
 

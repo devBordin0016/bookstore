@@ -28,12 +28,24 @@
         margin-left: 0;
     }
 
+<<<<<<< HEAD
+=======
+    [dir="rtl"] .inline-group ul.tools a.add,
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
     [dir="rtl"] .inline-group div.add-row a,
     [dir="rtl"] .inline-group .tabular tr.add-row td a {
         padding: 8px 26px 8px 10px;
         background-position: calc(100% - 8px) 9px;
     }
 
+<<<<<<< HEAD
+=======
+    [dir="rtl"] .selector .selector-filter label {
+        margin-right: 0;
+        margin-left: 8px;
+    }
+
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
     [dir="rtl"] .object-tools li {
         float: right;
     }
@@ -47,6 +59,25 @@
         padding-left: 0;
         padding-right: 16px;
     }
+<<<<<<< HEAD
+=======
+
+    [dir="rtl"] .selector-add {
+        background-position: 0 -80px;
+    }
+
+    [dir="rtl"] .selector-remove {
+        background-position: 0 -120px;
+    }
+
+    [dir="rtl"] .active.selector-add:focus, .active.selector-add:hover {
+        background-position: 0 -100px;
+    }
+
+    [dir="rtl"] .active.selector-remove:focus, .active.selector-remove:hover {
+        background-position: 0 -140px;
+    }
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
 }
 
 /* MOBILE */
@@ -75,6 +106,7 @@
         background-position: 0 0;
     }
 
+<<<<<<< HEAD
     [dir="rtl"] :enabled.selector-remove:focus, :enabled.selector-remove:hover {
         background-position: 0 -24px;
     }
@@ -85,5 +117,17 @@
 
     [dir="rtl"] :enabled.selector-add:focus, :enabled.selector-add:hover {
         background-position: 0 -72px;
+=======
+    [dir="rtl"] .active.selector-remove:focus, .active.selector-remove:hover {
+        background-position: 0 -20px;
+    }
+
+    [dir="rtl"] .selector-add  {
+        background-position: 0 -40px;
+    }
+
+    [dir="rtl"] .active.selector-add:focus, .active.selector-add:hover {
+        background-position: 0 -60px;
+>>>>>>> a53aa87f2c2b6cf924da08710a37ab0755907da7
     }
 }
